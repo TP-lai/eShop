@@ -44,6 +44,7 @@
 
 <script>
 import ProductModal from '../components/ProductModal.vue'
+
 export default {
 
   data () {
@@ -87,7 +88,7 @@ export default {
           if (res.data.success) {
             this.products = res.data.products
             this.pagination = res.data.pagination
-            console.log(res.data)
+            // console.log(res.data)
           }
         })
         .catch((error) => {
@@ -101,7 +102,7 @@ export default {
       } else {
         this.tempProduct = { ...item } // 將資料帶出來
       }
-      this.isNew = isNew
+      this.isNew = isNew // 是新資料還是修改資料(點新增還是編輯), Modal視窗共用新增和編輯產品
       const productComponent = this.$refs.productModal
       // // $refs.productModal.showModal() 原本是設定為按鈕
       productComponent.showModal()
@@ -110,10 +111,22 @@ export default {
       // console.table(item)
       // console.dir(item)
       this.tempProduct = item
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`
+      // 未進行編輯資料時, api是用post, 且api的網址不接產品id
+      // const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`
+      let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/product`
+      let httpMethod = 'post'
+
+      if (!this.isNew) { // 如果是編輯狀態, 取用新的api以及將取用方法改為put
+        api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/product/${item.id}`
+        httpMethod = 'put'
+      }
       const productComponent = this.$refs.productModal
-      this.$http.post(api, { data: this.tempProduct }).then((response) => {
-        console.log(response)
+      // this.$http.post(api, { data: this.tempProduct }).then((response) => {
+      // 取用方法參數用 [] 且前面不加點
+      this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
+        // this.$http 是function, 所以可以使用this.$http.get()或是this.$http['get']等用法
+        // Axios 是一個用於發送 HTTP 請求的 JavaScript 庫
+        // console.log(response)
         productComponent.hideModal() // 關閉編輯視窗
         this.getProducts() // 重新讀取產品列表
       })

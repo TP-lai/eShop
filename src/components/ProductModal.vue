@@ -127,6 +127,10 @@ export default {
   watch: {
     product () { // 監聽tempProduct 有無更新資料
       this.tempProduct = this.product
+      // 多圖範例 ???????????????????
+      if (!this.tempProduct.images) {
+        this.tempProduct.images = []
+      }
     }
   },
 
@@ -144,6 +148,23 @@ export default {
     },
     hideModal () {
       this.modal.hide()
+    },
+    uploadFile () {
+      // const uploadedFile = this.$refs.fileInput
+      // console.dir(uploadedFile) // 以上兩行會將資料產生至files的分類以及索引號
+      const uploadedFile = this.$refs.fileInput.files[0] // 指定給檔名
+      // console.dir(uploadedFile)
+      const formData = new FormData() // js 方法
+      formData.append('file-to-upload', uploadedFile) // 增加欄位
+
+      // 透過admin/upload api 將資料發送到遠端
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/upload`
+      this.$http.post(url, formData).then((response) => {
+        console.log(response.data) // check 是否有將圖片或檔案傳至後湍server
+        if (response.data.success) { // 若上傳成功則 更新tempProduct的圖檔為上傳的檔名
+          this.tempProduct.imageUrl = response.imageUrl
+        }
+      })
     }
   },
   mounted () {
