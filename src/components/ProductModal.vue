@@ -115,7 +115,10 @@
 </template>
 
 <script>
-import Modal from 'bootstrap/js/dist/modal'
+
+// import Modal from 'bootstrap/js/dist/modal' // mixin/////////////////////////
+import modalMixin from '@/mixins/modalMixin'
+
 export default {
   props: {
     product: {
@@ -143,12 +146,12 @@ export default {
     }
   },
   methods: {
-    showModal () {
-      this.modal.show()
-    },
-    hideModal () {
-      this.modal.hide()
-    },
+    // showModal () { // mixin/////////////////////////
+    //   this.modal.show()
+    // },
+    // hideModal () { // mixin/////////////////////////
+    //   this.modal.hide()
+    // },
     uploadFile () {
       // const uploadedFile = this.$refs.fileInput
       // console.dir(uploadedFile) // 以上兩行會將資料產生至files的分類以及索引號
@@ -167,8 +170,9 @@ export default {
       })
     }
   },
-  mounted () {
-    this.modal = new Modal(this.$refs.modal)
-  }
+  //   mounted () { // mixin/////////////////////////
+  //     this.modal = new Modal(this.$refs.modal)
+  //   },
+  mixins: [modalMixin]
 }
 </script>

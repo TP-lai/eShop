@@ -4,11 +4,12 @@
       增加一個產品
     </button>
   </div>
-  <table class="table mt-4">
+  <table class="table mt-4" style="width: 80%; margin: auto;">
     <thead>
       <tr>
         <th width="120">分類</th>
         <th>產品名稱</th>
+        <th>產品圖片</th>
         <th width="120">原價</th>
         <th width="120">售價</th>
         <th width="100">是否啟用</th>
@@ -19,6 +20,7 @@
       <tr v-for="item in products" :key="item.id">
         <td>{{ item.category }}</td>
         <td>{{ item.title }}</td>
+        <td><img class="" style="width: 150px" :src="item.imageUrl" alt="" /></td>
         <td class="text-right">
           {{ item.origin_price }}
         </td>
@@ -32,18 +34,19 @@
         <td>
           <div class="btn-group">
             <button class="btn btn-outline-primary btn-sm" @click="openModal(false, item)">編輯</button>
-            <button class="btn btn-outline-danger btn-sm">刪除</button>
+            <button class="btn btn-outline-danger btn-sm" @click="openDelProductModal(item)">刪除</button>
           </div>
         </td>
       </tr>
     </tbody>
   </table>
 
-  <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"></ProductModal>
+  <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"/>
+  <DelModal :item="tempProduct" ref="delModal" @del-item="delProduct"/>
 </template>
-
 <script>
-import ProductModal from '../components/ProductModal.vue'
+import ProductModal from '@/components/ProductModal.vue'
+import DelModal from '@/components/DelModal.vue'
 
 export default {
 
@@ -77,12 +80,13 @@ export default {
     }
   },
   components: {
-    ProductModal
+    ProductModal,
+    DelModal
   },
   methods: {
     getProducts () {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/products`
-      console.log(api)
+      console.log('my_api path: ' + api)
       this.$http.get(api)
         .then((res) => {
           if (res.data.success) {
@@ -129,6 +133,22 @@ export default {
         // console.log(response)
         productComponent.hideModal() // 關閉編輯視窗
         this.getProducts() // 重新讀取產品列表
+      })
+    },
+
+    // 開啟刪除 Modal
+    openDelProductModal (item) {
+      this.tempProduct = { ...item }
+      const delComponent = this.$refs.delModal
+      delComponent.showModal()
+    },
+    delProduct () {
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`
+      this.$http.delete(url).then((response) => {
+        console.log(response.data)
+        const delComponent = this.$refs.delModal
+        delComponent.hideModal()
+        this.getProducts()
       })
     }
   },
