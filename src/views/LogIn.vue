@@ -1,4 +1,5 @@
 <template>
+  <PageLoading :active="isLoading" />
     <div class="container mt-5">
         <form class="row justify-content-center" @submit.prevent="signin">
             <div class="col-md-6">
@@ -27,7 +28,8 @@ export default {
     return {
       user: {
         username: '',
-        password: ''
+        password: '',
+        isLoading: false
       }
     }
   },
@@ -37,8 +39,10 @@ export default {
       // api 路徑串接, 有兩段,第一段是環境變數站點位置 第二段是實際的api
       const api = `${process.env.VUE_APP_API}admin/signin`
       // console.log(api)
+      this.isLoading = true
       this.$http.post(api, this.user)
         .then((res) => { // 成功之後就轉到dashboard
+          this.isLoading = false
           if (res.data.success) {
           // 將登入資料記錄至 cookie
             const { token, expired } = res.data // 將token以及expired值取出

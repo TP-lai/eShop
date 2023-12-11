@@ -1,4 +1,5 @@
 <template>
+  <PageLoading :active="isLoading" />
   <div class="text-end mt-3">
     <button class="btn btn-primary" type="button" @click="openModal(true)">
       增加一個產品
@@ -76,7 +77,8 @@ export default {
       ],
       pagination: {},
       tempProduct: {},
-      isNew: false
+      isNew: false,
+      isLoading: false
     }
   },
   components: {
@@ -87,8 +89,10 @@ export default {
     getProducts () {
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/products`
       console.log('my_api path: ' + api)
+      this.isLoading = true
       this.$http.get(api)
         .then((res) => {
+          this.isLoading = false
           if (res.data.success) {
             this.products = res.data.products
             this.pagination = res.data.pagination
