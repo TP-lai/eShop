@@ -42,39 +42,20 @@
     </tbody>
   </table>
 
+  <PagInation :pages="pagination" @emit-pages="getProducts"/>
   <ProductModal ref="productModal" :product="tempProduct" @update-product="updateProduct"/>
   <DelModal :item="tempProduct" ref="delModal" @del-item="delProduct"/>
 </template>
 <script>
 import ProductModal from '@/components/ProductModal.vue'
 import DelModal from '@/components/DelModal.vue'
+import PagInation from '@/components/PagInation.vue'
 
 export default {
 
   data () {
     return {
-      products: [
-        // {
-        //   category: '測試分類',
-        //   content: '測試的說明',
-        //   description: '測試的描述',
-        //   id: '-Nksndf6xSKZkn-_zbQf',
-        //   imageUrl: 'https://sky-blue.91app.io/photo/201103/12121771/-01.jpg',
-        //   imagesUrl: [
-        //     'https://diz36nn4q02zr.cloudfront.net/webapi/imagesV3/Original/SalePage/5244140/0/638354692782270000?v=1',
-        //     'https://diz36nn4q02zr.cloudfront.net/webapi/imagesV3/Original/SalePage/5244140/1/638354692782270000?v=1',
-        //     'https://diz36nn4q02zr.cloudfront.net/webapi/imagesV3/Original/SalePage/5244140/2/638354692782270000?v=1',
-        //     'https://diz36nn4q02zr.cloudfront.net/webapi/imagesV3/Original/SalePage/5244140/3/638354692782270000?v=1',
-        //     'https://sky-blue.91app.io/photo/201103/12121771/-03.jpg'
-        //   ],
-        //   is_enabled: 1,
-        //   origin_price: 1000,
-        //   price: 500,
-        //   title: '測試的產品',
-        //   unit: '單位',
-        //   num: 4
-        // }
-      ],
+      products: [],
       pagination: {},
       tempProduct: {},
       isNew: false,
@@ -83,11 +64,14 @@ export default {
   },
   components: {
     ProductModal,
-    DelModal
+    DelModal,
+    PagInation
   },
+  inject: ['emitter'], // 外層Dashboard 設定emiter provide, 此處引用
   methods: {
-    getProducts () {
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/products`
+    getProducts (page) {
+      console.log('success')
+      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/products/?page=${page}`
       console.log('my_api path: ' + api)
       this.isLoading = true
       this.$http.get(api)
@@ -136,7 +120,22 @@ export default {
         // Axios 是一個用於發送 HTTP 請求的 JavaScript 庫
         // console.log(response)
         productComponent.hideModal() // 關閉編輯視窗
-        this.getProducts() // 重新讀取產品列表
+        // this.getProducts() // 重新讀取產品列表
+
+        // 以下增加toast回饋編輯成功訊息
+        if (response.data.success) {
+          this.getProducts()
+          this.emitter.emit('push-message', {
+            style: 'success',
+            title: '更新成功'
+          })
+        } else {
+          this.emitter.emit('push-message', {
+            style: 'danger',
+            title: '更新失敗',
+            content: response.data.message.join('、')
+          })
+        }
       })
     },
 
@@ -147,7 +146,7 @@ export default {
       delComponent.showModal()
     },
     delProduct () {
-      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product/${this.tempProduct.id}`
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/product/${this.tempProduct.id}`
       this.$http.delete(url).then((response) => {
         console.log(response.data)
         const delComponent = this.$refs.delModal

@@ -1,15 +1,27 @@
 <template>
     <Navbar></Navbar>
-    <div class="container-fluid">
+    <!-- mt-3 position-relative 是for toast的css-->
+    <div class="container-fluid mt-3 position-relative">
+      <ToastMessages></ToastMessages>
     <router-view />
    </div>
 </template>
 
 <script>
-import Navbar from '../components/NavBar.vue'
+import Navbar from '@/components/NavBar.vue'
+import ToastMessages from '@/components/ToastMessages.vue'
+import emitter from '@/methods/emitter'
 export default {
-  components: { Navbar },
+  components: {
+    Navbar,
+    ToastMessages
+  },
 
+  provide () {
+    return {
+      emitter
+    }
+  },
   created () {
     // 取出cookie
     const token = document.cookie.replace(/(?:(?:^|.*;\s*)hexToken\s*=\s*([^;]*).*$)|^.*$/, '$1')
