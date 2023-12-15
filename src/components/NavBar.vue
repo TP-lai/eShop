@@ -9,16 +9,16 @@
             <div class="collapse navbar-collapse" id="navbarText">
                 <ul class="navbar-nav me-auto mb-2 mb-lg-0">
                     <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="#">Home</a>
+                        <a class="nav-link" aria-current="page" href="#">Home</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#/dashboard/products">Products</a>
+                        <a class="nav-link" href="/dashboard/products">Products</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#/dashboard/order">Order</a>
+                        <a class="nav-link" href="/dashboard/order">Order</a>
                     </li>
                     <li class="nav-item">
-                        <a class="nav-link" href="#/dashboard/coupon">Coupon</a>
+                        <a class="nav-link" href="/dashboard/coupon">Coupon</a>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link" href="#" @click.prevent="logout">登出</a>

@@ -5,27 +5,27 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title" id="exampleModalLabel">電子折價券資訊</h5>
+                    <h5 class="modal-title" id="exampleModalLabel">活動優惠券資訊</h5>
                     <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                 </div>
                 <div class="modal-body">
                     <!---->
                     <div class="row mb-3">
-                        <label for="inputName" class="col-sm-2 col-form-label">標題</label>
+                        <label for="inputName" class="col-sm-2 col-form-label">標 題</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="couponName" placeholder="請輸入標題" v-model="tempCoupons.title">
+                            <input type="text" class="form-control" id="couponName" placeholder="請輸入活動名稱" v-model="tempCoupons.title">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="inputDiscount" class="col-sm-2 col-form-label">折扣(%)</label>
                         <div class="col-sm-10">
-                            <input type="number" class="form-control" id="couponDiscount"  placeholder="請輸入折扣" v-model="tempCoupons.percent">
+                            <input type="number" class="form-control" id="couponDiscount"  placeholder="請輸入折扣數(%)" v-model="tempCoupons.percent">
                         </div>
                     </div>
                     <div class="row mb-3">
                         <label for="inputDiscount" class="col-sm-2 col-form-label">優惠碼</label>
                         <div class="col-sm-10">
-                            <input type="text" class="form-control" id="couponCode"  placeholder="請輸入優惠碼" v-model="tempCoupons.code">
+                            <input type="text" class="form-control" id="couponCode"  placeholder="請輸入活動優惠碼" v-model="tempCoupons.code">
                         </div>
                     </div>
                     <div class="row mb-3">
@@ -39,7 +39,7 @@
                             <div class="form-check">
                                 <input class="form-check-input" type="checkbox" v-model="tempCoupons.is_enabled" :true-value="1" :false-value="0" id="is_enabled" />
                                 <label class="form-check-label" for="is_enabled">
-                                    是否啟用
+                                    勾選啟用此優惠券
                                 </label>
                             </div>
                         </div>
@@ -79,11 +79,11 @@ export default {
     coupon () {
       this.tempCoupons = this.coupon
       // 將時間格式改為 YYYY-MM-DD
-      console.log(this.tempCoupons.due_date)
+      console.log('原始時間碼除1000', this.tempCoupons.due_date)
       const dateAndTime = new Date(this.tempCoupons.due_date * 1000)
-        .toISOString().split('T')
+        .toISOString().split('T') // split('T') 是用分隔線 - 分開年月日
       this.due_date = dateAndTime[0]
-      console.log(this.due_date)
+      console.log('時間碼乘回1000再轉成數字日期', this.due_date)
     },
 
     due_date () {

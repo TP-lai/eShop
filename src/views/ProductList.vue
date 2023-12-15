@@ -94,7 +94,7 @@ export default {
       } else {
         this.tempProduct = { ...item } // 將資料帶出來
       }
-      this.isNew = isNew // 是新資料還是修改資料(點新增還是編輯), Modal視窗共用新增和編輯產品
+      // this.isNew = isNew // 是新資料還是修改資料(點新增還是編輯), Modal視窗共用新增和編輯產品
       const productComponent = this.$refs.productModal
       // // $refs.productModal.showModal() 原本是設定為按鈕
       productComponent.showModal()
