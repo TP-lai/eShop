@@ -21,7 +21,7 @@
       <tr v-for="item in products" :key="item.id">
         <td>{{ item.category }}</td>
         <td>{{ item.title }}</td>
-        <td><img class="" style="width: 150px" :src="item.imageUrl" alt="" /></td>
+        <td><img class="" style="width: 100px" :src="item.imageUrl" alt="" /></td>
         <td class="text-right">
           {{ $$filters.currency(item.origin_price) }}
         </td>

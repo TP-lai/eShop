@@ -33,6 +33,24 @@ const routes = [
       }
 
     ]
+  },
+  {
+    path: '/products',
+    component: () => import('../user/ProductAll.vue'),
+    children: [
+      {
+        path: 'backpack',
+        component: () => import('../user/ProductBackpack.vue')
+      },
+      {
+        path: 'accesarry',
+        component: () => import('../user/ProductAccesarry.vue')
+      },
+      {
+        path: 'backpack/:productId',
+        component: () => import('../user/ProductDetails.vue')
+      }
+    ]
   }
 ]
 
