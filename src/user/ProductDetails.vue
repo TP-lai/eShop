@@ -2,7 +2,7 @@
   <div class="details" style="background-color: white;">
     <nav aria-label="breadcrumb">
       <ol class="breadcrumb">
-        <li class="breadcrumb-item"><router-link to="/user/cart">購物車</router-link></li>
+        <li class="breadcrumb-item"><router-link to="">購物車</router-link></li>
         <li class="breadcrumb-item active" aria-current="page">{{ product.title }}</li>
       </ol>
     </nav>
@@ -46,7 +46,7 @@ export default {
           this.product = response.data.product
         }
       })
-    }
+    },
     // addToCart (id, qty = 1) {
     //   const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/cart`
     //   const cart = {
@@ -60,7 +60,21 @@ export default {
     //     this.$router.push('/user/cart')
     //   })
     // }
-
+    addCart (id) {
+      // console.log(id)
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
+      // this.status.add2cart = id
+      console.log(this.status.add2cart)
+      const cart = {
+        product_id: id,
+        qty: 1
+      }
+      this.$http.post(url, { data: cart })
+        .then((res) => {
+          this.status.add2cart = ''
+          console.log(res)
+        })
+    }
   },
   created () {
     this.id = this.$route.params.productId

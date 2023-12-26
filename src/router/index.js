@@ -49,6 +49,10 @@ const routes = [
       {
         path: 'backpack/:productId',
         component: () => import('../user/ProductDetails.vue')
+      },
+      {
+        path: 'cart',
+        component: () => import('../user/CartCheck.vue')
       }
     ]
   }

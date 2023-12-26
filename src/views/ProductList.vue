@@ -70,7 +70,7 @@ export default {
   inject: ['emitter'], // 外層Dashboard 設定emiter provide, 此處引用
   methods: {
     getProducts (page) {
-      console.log('success')
+      // console.log('success')
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/products/?page=${page}`
       console.log('my_api path: ' + api)
       this.isLoading = true
@@ -107,6 +107,7 @@ export default {
       // const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}/admin/product`
       let api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/product`
       let httpMethod = 'post'
+      console.log(this.isNew)
 
       if (!this.isNew) { // 如果是編輯狀態, 取用新的api以及將取用方法改為put
         api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}admin/product/${item.id}`
@@ -118,7 +119,7 @@ export default {
       this.$http[httpMethod](api, { data: this.tempProduct }).then((response) => {
         // this.$http 是function, 所以可以使用this.$http.get()或是this.$http['get']等用法
         // Axios 是一個用於發送 HTTP 請求的 JavaScript 庫
-        // console.log(response)
+        console.log(response)
         productComponent.hideModal() // 關閉編輯視窗
         // this.getProducts() // 重新讀取產品列表
 
@@ -157,7 +158,7 @@ export default {
   },
 
   created () {
-    this.getProducts()
+    this.getProducts(1)
   }
 }
 </script>
