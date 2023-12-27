@@ -1,9 +1,11 @@
 <template>
+  <PageLoading :active="isLoading" />
   <div class="container">
-
-    <!-- 購物車列表 -->
-
+    <!-- 購物車 -->
     <div class="sticky-top">
+      <h3 class="fw-bold" style="padding: 25px 0 0 0;">購物車清單</h3>
+      <span style="display: flex; justify-content: flex-end; margin-bottom: 15px">
+        <router-link to="../products/backpack">回商店繼續逛逛</router-link></span>
       <table class="table align-middle">
         <thead>
           <tr>
@@ -19,9 +21,9 @@
           <template v-if="cartList.carts">
             <tr v-for="item in cartList.carts" :key="item.id">
               <td>
-                <button type="button" class="btn btn-outline-danger btn-sm" :disabled="status.loadingItem === item.id"
+                <button type="button" class="btn btn-outline-secondary btn-sm" :disabled="status.loadingItem === item.id"
                   @click="removeCartItem(item.id)">
-                  <i class="bi bi-x"></i>
+                  <i class="bi bi-x-lg"></i>
                 </button>
               </td>
               <td>
@@ -42,15 +44,14 @@
                 </div>
               </td>
               <td class="text-center">
-                <span v-if="item.product.origin_price ===  item.product.price ">{{ item.product.origin_price }}</span>
-                <span v-else>
-                  (限時特價) {{ item.product.price }} 元<br>
+                <span v-if="item.product.origin_price ===  item.product.price ">{{ item.product.origin_price }} 元</span>
+                <span v-else> <span class="text-danger">(特價)</span> {{ item.product.price }} 元<br>
                   <!-- <small class="text-danger" style="text-decoration: line-through;">原價： {{ item.product.origin_price }}</small> -->
                 </span>
               </td>
               <td class="text-end">
                 ${{ item.total }} 元 <br>
-                <small v-if="cartList.final_total !== cartList.total" class="text-danger">折扣價： {{ item.final_total
+                <small v-if="cartList.final_total !== cartList.total" class="text-success">折扣價： {{ item.final_total
                 }}</small>
               </td>
             </tr>
@@ -60,7 +61,7 @@
           <tr class="table-secondary">
             <td colspan="3">
               <div class="input-group input-group-sm">
-                <input type="text" class="form-control" v-model="coupon_code" placeholder="請輸入優惠碼">
+                <input type="text" class="form-control" v-model="coupon_code" placeholder="輸入活動優惠碼 (請查看您信箱內的活動優惠通知)">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">
                     套用優惠碼
@@ -68,12 +69,14 @@
                 </div>
               </div>
             </td>
-            <td colspan="2" class="text-end fw-bolder">總計金額 </td>
-            <td class="text-end fw-bolder">$ {{ cartList.final_total }} 元</td>
-          </tr>
-          <tr v-if="cartList.final_total !== cartList.total">
-            <td colspan="3" class="text-end text-success">折扣價</td>
-            <td class="text-end text-success"></td>
+            <td colspan="2" class="text-end fw-bolder">
+              <span class="text-success" v-if="cartList.final_total !== cartList.total">
+                (已套用 {{ cartList.final_total / cartList.total *10 }}折 限時活動優惠券)
+              </span>總計金額</td>
+            <td class="text-end fw-bolder">
+              <span class="text-danger">$ {{ cartList.final_total }} 元</span>
+              <br v-if="cartList.final_total !== cartList.total">
+              <span v-if="cartList.final_total !== cartList.total">折扣前 ( ${{ cartList.total }} 元)</span></td>
           </tr>
         </tfoot>
       </table>
@@ -87,11 +90,13 @@ export default {
     return {
       // products: [],
       // product: {},
+      isLoading: false,
       status: {
         loadingItem: '' // 對應品項 id
       },
       cartList: {},
-      coupon_code: ''
+      coupon_code: '',
+      getCoupon: false
     }
   },
   methods: {
@@ -135,8 +140,6 @@ export default {
         this.status.loadingItem = ''
         this.getCart()
       })
-      // eslint-disable-next-line no-undef
-      // console.log('updateCart', response)
     },
     getCart () {
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
@@ -147,6 +150,30 @@ export default {
         this.cartList = Response.data.data
         // this.isLoading = false
       })
+    },
+    removeCartItem (id) {
+      this.status.loadingItem = id
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart/${id}`
+      this.isLoading = true
+      this.$http.delete(url)
+        .then((res) => {
+          this.status.loadingItem = ''
+          this.getCart()
+          this.isLoading = false
+        })
+    },
+    addCouponCode () {
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}coupon`
+      const coupon = {
+        code: this.coupon_code
+      }
+      this.isLoading = true
+      this.$http.post(url, { data: coupon })
+        .then((res) => {
+          this.getCart()
+          this.isLoading = false
+          // this.getCoupon = true
+        })
     }
   },
   created () {
