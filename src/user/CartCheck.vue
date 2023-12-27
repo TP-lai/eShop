@@ -37,14 +37,13 @@
               </td>
               <td>
                 <div class="input-group input-group-sm">
-                  <input type="number" class="form-control" min="1"
-                  :disabled="item.id === status.loadingItem"
-                  @change="updateCart(item)" v-model.number="item.qty">
+                  <input type="number" class="form-control" min="1" :disabled="item.id === status.loadingItem"
+                    @change="updateCart(item)" v-model.number="item.qty">
                   <div class="input-group-text">/ {{ item.product.unit }}</div>
                 </div>
               </td>
               <td class="text-center">
-                <span v-if="item.product.origin_price ===  item.product.price ">{{ item.product.origin_price }} 元</span>
+                <span v-if="item.product.origin_price === item.product.price">{{ item.product.origin_price }} 元</span>
                 <span v-else> <span class="text-danger">(特價)</span> {{ item.product.price }} 元<br>
                   <!-- <small class="text-danger" style="text-decoration: line-through;">原價： {{ item.product.origin_price }}</small> -->
                 </span>
@@ -61,7 +60,9 @@
           <tr class="table-secondary">
             <td colspan="3">
               <div class="input-group input-group-sm">
-                <input type="text" class="form-control" v-model="coupon_code" placeholder="輸入活動優惠碼 (請查看您信箱內的活動優惠通知)">
+                <input type="text" class="form-control"
+                  style=" border: 1px dashed #d97e00; border-right: none; background-color: #ffe5c6;"
+                  v-model="coupon_code" placeholder="請輸入活動優惠碼 (查看您信箱內的活動優惠通知)">
                 <div class="input-group-append">
                   <button class="btn btn-outline-secondary" type="button" @click="addCouponCode">
                     套用優惠碼
@@ -71,16 +72,55 @@
             </td>
             <td colspan="2" class="text-end fw-bolder">
               <span class="text-success" v-if="cartList.final_total !== cartList.total">
-                (已套用 {{ cartList.final_total / cartList.total *10 }}折 限時活動優惠券)
-              </span>總計金額</td>
+                (已套用 {{ cartList.final_total / cartList.total * 10 }}折 限時活動優惠券)
+              </span>總計金額
+            </td>
             <td class="text-end fw-bolder">
               <span class="text-danger">$ {{ cartList.final_total }} 元</span>
               <br v-if="cartList.final_total !== cartList.total">
-              <span v-if="cartList.final_total !== cartList.total">折扣前 ( ${{ cartList.total }} 元)</span></td>
+              <span v-if="cartList.final_total !== cartList.total">折扣前 ( ${{ cartList.total }} 元)</span>
+            </td>
           </tr>
         </tfoot>
       </table>
+      <div>
+        <h3 class="fw-bold" style="padding: 25px 0 0 0;">填寫訂購單</h3>
+        <div class="my-5 row justify-content-center">
+          <Form class="col-md-6">
+            <div class="mb-3">
+              <label for="email" class="form-label">Email</label>
+              <Field id="email" name="email" type="email" class="form-control" placeholder="請輸入 Email" rules="email|required" v-model="form.email">qweqe</Field>
+              <ErrorMessage name="email" class="invalid-feedback"></ErrorMessage>
+            </div>
 
+            <div class="mb-3">
+              <label for="name" class="form-label">收件人姓名</label>
+              <Field id="name" name="姓名" type="text" class="form-control" placeholder="請輸入姓名" rules="required"></Field>
+              <!-- <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage> -->
+            </div>
+
+            <div class="mb-3">
+              <label for="tel" class="form-label">收件人電話</label>
+              <Field id="tel" name="電話" type="tel" class="form-control" placeholder="請輸入電話" rules="required"></Field>
+              <ErrorMessage name="電話" class="invalid-feedback"></ErrorMessage>
+            </div>
+
+            <div class="mb-3">
+              <label for="address" class="form-label">收件人地址</label>
+              <Field id="address" name="地址" type="text" class="form-control" placeholder="請輸入地址" rules="required"></Field>
+              <!-- <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage> -->
+            </div>
+
+            <div class="mb-3">
+              <label for="message" class="form-label">留言</label>
+              <textarea name="" id="message" class="form-control" cols="30" rows="10"></textarea>
+            </div>
+            <div class="text-end">
+              <button class="btn btn-danger">送出訂單</button>
+            </div>
+          </Form>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -96,7 +136,17 @@ export default {
       },
       cartList: {},
       coupon_code: '',
-      getCoupon: false
+      getCoupon: false,
+
+      form: {
+        user: {
+          name: '',
+          email: '',
+          tel: '',
+          address: ''
+        },
+        message: ''
+      }
     }
   },
   methods: {

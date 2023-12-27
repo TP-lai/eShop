@@ -18,7 +18,7 @@
                       <router-link to="" class="nav-link fw-bolder">飾品</router-link>
                     </li>
                     <li class="nav-item">
-                      <router-link to="" class="nav-link fw-bolder">布料</router-link>
+                      <router-link to="" class="nav-link fw-bolder">布料批發</router-link>
                     </li>
                     <li class="nav-item">
                         <a class="nav-link fw-bolder" href="#" @click.prevent="logout">登出</a>
