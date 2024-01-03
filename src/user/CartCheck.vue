@@ -9,12 +9,12 @@
       <table class="table align-middle">
         <thead>
           <tr>
-            <th></th>
-            <th></th>
-            <th>品名</th>
-            <th class="text-center" style="width: 110px">數量</th>
-            <th class="text-center">單價</th>
-            <th class="text-end">細項金額</th>
+            <th style="width: 10%"></th>
+            <th style="width: 10%"></th>
+            <th style="width: 45%">品名</th>
+            <th class="text-center" style="width: 10%">數量</th>
+            <th class="text-center" style="width: 10%">單價</th>
+            <th class="text-end" style="width: 15%">單項小計</th>
           </tr>
         </thead>
         <tbody>
@@ -86,39 +86,45 @@
       <div>
         <h3 class="fw-bold" style="padding: 25px 0 0 0;">填寫訂購單</h3>
         <div class="my-5 row justify-content-center">
-          <Form class="col-md-6">
+          <VForm class="col-md-6" v-slot="{ errors }" @submit="createOrder">
             <div class="mb-3">
               <label for="email" class="form-label">Email</label>
-              <Field id="email" name="email" type="email" class="form-control" placeholder="請輸入 Email" rules="email|required" v-model="form.email">qweqe</Field>
+              <VField id="email" name="email" type="email" class="form-control"
+              :class="{'is-invalid': errors['email']}"
+               placeholder="請輸入 Email" rules="email|required" v-model="form.user.email"></VField>
               <ErrorMessage name="email" class="invalid-feedback"></ErrorMessage>
             </div>
 
             <div class="mb-3">
               <label for="name" class="form-label">收件人姓名</label>
-              <Field id="name" name="姓名" type="text" class="form-control" placeholder="請輸入姓名" rules="required"></Field>
-              <!-- <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage> -->
+              <VField id="name" name="姓名" type="text" class="form-control"
+              :class="{'is-invalid': errors['姓名']}"
+               placeholder="請輸入姓名" rules="required" v-model="form.user.name"></VField>
+              <ErrorMessage name="姓名" class="invalid-feedback"></ErrorMessage>
             </div>
 
             <div class="mb-3">
               <label for="tel" class="form-label">收件人電話</label>
-              <Field id="tel" name="電話" type="tel" class="form-control" placeholder="請輸入電話" rules="required"></Field>
+              <VField id="tel" name="電話" type="tel" class="form-control"
+              :class="{ 'is-invalid': errors['電話']}" placeholder="請輸入電話" rules="required" v-model="form.user.tel"></VField>
               <ErrorMessage name="電話" class="invalid-feedback"></ErrorMessage>
             </div>
 
             <div class="mb-3">
               <label for="address" class="form-label">收件人地址</label>
-              <Field id="address" name="地址" type="text" class="form-control" placeholder="請輸入地址" rules="required"></Field>
-              <!-- <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage> -->
+              <VField id="address" name="地址" type="text" class="form-control"
+              :class="{'is-invalid': errors['地址']}" placeholder="請輸入地址" rules="required" v-model="form.user.address"></VField>
+              <ErrorMessage name="地址" class="invalid-feedback"></ErrorMessage>
             </div>
 
             <div class="mb-3">
               <label for="message" class="form-label">留言</label>
-              <textarea name="" id="message" class="form-control" cols="30" rows="10"></textarea>
+              <textarea name="" id="message" class="form-control" cols="30" rows="10" rules="required"  v-model="form.message"></textarea>
             </div>
             <div class="text-end">
               <button class="btn btn-danger">送出訂單</button>
             </div>
-          </Form>
+          </VForm>
         </div>
       </div>
     </div>
@@ -128,11 +134,9 @@
 export default {
   data () {
     return {
-      // products: [],
-      // product: {},
       isLoading: false,
       status: {
-        loadingItem: '' // 對應品項 id
+        loadingItem: '' // 對應 id
       },
       cartList: {},
       coupon_code: '',
@@ -150,31 +154,6 @@ export default {
     }
   },
   methods: {
-    // getProducts () {
-    //   const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}products/all`
-    //   // this.isLoading = true
-    //   this.$http.get(url).then((response) => {
-    //     this.products = response.data.products
-    //     console.log('products:', response)
-    //     // this.isLoading = false
-    //   })
-    // },
-    // getProduct (id) {
-    //   this.$router.push(`/user/product/${id}`)
-    // },
-    // addCart (id) {
-    //   const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
-    //   this.status.loadingItem = id
-    //   const cart = {
-    //     product_id: id,
-    //     qty: 1
-    //   }
-    //   this.$http.post(url, { data: cart })
-    //     .then((res) => {
-    //       this.status.loadingItem = ''
-    //       console.log(res)
-    //     })
-    // },
     updateCart (item) {
       const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart/${item.id}`
       // console.log(url)
@@ -196,7 +175,7 @@ export default {
       // this.isLoading = true
       this.$http.get(url).then((Response) => {
         // console.log(res)
-        console.log('getCart', Response)
+        // console.log('getCart', Response)
         this.cartList = Response.data.data
         // this.isLoading = false
       })
@@ -223,6 +202,17 @@ export default {
           this.getCart()
           this.isLoading = false
           // this.getCoupon = true
+        })
+    },
+    createOrder () {
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}order`
+      const order = this.form
+      // console.log(order)
+      this.$http.post(url, { data: order })
+        .then((res) => {
+          // console.log(res)
+          this.form = {}
+          this.router.push()
         })
     }
   },

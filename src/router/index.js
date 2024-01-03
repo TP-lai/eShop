@@ -30,6 +30,10 @@ const routes = [
       {
         path: 'coupon',
         component: () => import('../views/CouponOffer.vue')
+      },
+      {
+        path: 'orders',
+        component: () => import('../views/CheckOrders.vue')
       }
 
     ]
@@ -53,6 +57,10 @@ const routes = [
       {
         path: 'cart',
         component: () => import('../user/CartCheck.vue')
+      },
+      {
+        path: 'checkout/:orderId',
+        component: () => import('../user/CheckOut')
       }
     ]
   }
