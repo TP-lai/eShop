@@ -11,6 +11,8 @@ import {
 import * as AllRules from '@vee-validate/rules'
 import { localize, setLocale } from '@vee-validate/i18n'
 import zhTW from '@vee-validate/i18n/dist/locale/zh_TW.json'
+// import Pina
+import { createPinia } from 'pinia'
 
 import App from './App.vue'
 import router from './router'
@@ -28,12 +30,15 @@ configure({
 // 設定預設語系
 setLocale('zh_TW')
 
+// Pinia
+const pinia = createPinia()
 const app = createApp(App)
-// currency- vue3之全局變量; $$filyrts是自訂義方法
+// currency- vue3之全局變量; $$filters是自訂義方法
 app.config.globalProperties.$$filters = {
   currency, date
 }
 app.use(VueAxios, axios)
+app.use(pinia)
 app.use(router)
 app.component('PageLoading', Loading) // 全域宣告
 

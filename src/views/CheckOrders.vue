@@ -3,7 +3,7 @@
     <table class="table table-primary" style="width: 80%; margin: auto;">
       <thead>
         <tr>
-          <th scope="col">訂單編號</th>
+          <th scope="col">訂單編號 (eShop-XXXX)</th>
           <th scope="col">訂單日期</th>
           <th scope="col">已付款</th>
           <th scope="col">付款確認日期</th>
@@ -26,7 +26,7 @@
           <td>
             <div class="btn-group">
               <button class="btn btn-outline-primary btn-sm" v-if="!item.is_paid" @click="payOrder(item.id)">設定結清</button>
-              <span class="text-muted" v-else></span>
+              <span class="text-muted" v-else>已結清</span>
             </div>
 
           </td>

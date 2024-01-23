@@ -210,9 +210,10 @@ export default {
       // console.log(order)
       this.$http.post(url, { data: order })
         .then((res) => {
-          // console.log(res)
-          this.form = {}
-          this.router.push()
+          console.log(res)
+          if (res.data.success) { // move to thanks page
+            this.$router.push('/confirm')
+          }
         })
     }
   },
