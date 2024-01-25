@@ -1,4 +1,5 @@
 <template>
+  <PageLoading :active="isLoading" />
   <div class="bg-background">
     <div class="BackPack" container>
       <div class="row" style="width: 100%;">
@@ -31,15 +32,18 @@
 </template>
 
 <script>
+import { mapState, mapActions } from 'pinia'
+import productStore from '@/stores/productStores'
+import statusStore from '@/stores/statusStore'
 
 export default {
   data () {
     return {
-      products: [],
+      // products: [],  mapState 加入之後, 這須註解掉
       backpack: [],
       accessary: [],
       tempProducts: {},
-      isLoading: false,
+      // isLoading: false,
       myproduct: {},
       status: {
         add2cart: '' // add card status
@@ -47,23 +51,28 @@ export default {
 
     }
   },
+  computed: {
+    ...mapState(productStore, ['products']),
+    ...mapState(statusStore, ['isLoading'])
+  },
   methods: {
-    getproducts () {
-      // console.log('CHECK STATUS : success')
-      const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}products?pag=:page`
-      console.log('user product', api)
-      this.$http.get(api)
-        .then((res) => {
-          if (res.data.success) {
-            console.log(res.data.products)
-            // if (res.data.products.category === '背包') {
-            //   this.backpack = res.data.products
-            //   console.log(this.backpack)
-            // }
-            this.products = res.data.products
-          }
-        })
-    },
+    ...mapActions(productStore, ['getproducts']),
+    // getproducts () {
+    //   //// console.log('CHECK STATUS : success')
+    //   const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}products?pag=:page`
+    //   console.log('user product', api)
+    //   this.$http.get(api)
+    //     .then((res) => {
+    //       if (res.data.success) {
+    //         console.log(res.data.products)
+    //         //// if (res.data.products.category === '背包') {
+    //         ////   this.backpack = res.data.products
+    //        ////   console.log(this.backpack)
+    //        // // }
+    //         this.products = res.data.products
+    //       }
+    //     })
+    // },
     getMyproduct (id) {
       this.$router.push(`/products/backpack/${id}`)
     },
