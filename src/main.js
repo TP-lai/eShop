@@ -31,8 +31,13 @@ configure({
 setLocale('zh_TW')
 
 // Pinia
-const pinia = createPinia()
 const app = createApp(App)
+const pinia = createPinia()
+
+// pinia.use(({ store }) => {
+//   store.$router = markRaw(router)
+// })
+
 // currency- vue3之全局變量; $$filters是自訂義方法
 app.config.globalProperties.$$filters = {
   currency, date

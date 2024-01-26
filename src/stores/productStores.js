@@ -2,7 +2,7 @@ import axios from 'axios'
 import { defineStore } from 'pinia'
 import statusStore from './statusStore'
 
-const loadingStatus = statusStore() // 不用 reactive, 直接取出
+const status = statusStore() // 不用reactive 可使用宣告直接取出
 export default defineStore('productStore', {
   state: () => {
     return {
@@ -20,7 +20,7 @@ export default defineStore('productStore', {
       // console.log('CHECK STATUS : success')
       const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}products?pag=:page`
       //   console.log('user product', api)
-      loadingStatus.isLoading = true
+      status.isLoading = true
       axios.get(api) // this.$http.get(api) 要改為axios.get...
         .then((res) => {
           if (res.data.success) {
@@ -30,10 +30,39 @@ export default defineStore('productStore', {
             //   console.log(this.backpack)
             // }
             this.products = res.data.products
-            loadingStatus.isLoading = false
+            status.isLoading = false
           }
         })
-    }
-  }
+    },
 
+    getMyproduct (id) {
+      this.$router.push(`/products/backpack/${id}`)
+    },
+
+    getCart () {
+      const cart = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
+      axios.get(cart)
+        .then((res) => {
+          console.log(res)
+          console.log(res.data.data.carts.length)
+        })
+    },
+
+    addCart (id) {
+      // console.log(id)
+      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
+      // this.add2status.add2cart = id
+      // console.log(this.add2status.add2cart)
+      const cart = {
+        product_id: id,
+        qty: 1
+      }
+      axios.post(url, { data: cart })
+        .then((res) => {
+          this.add2status.add2cart = ''
+          console.log(res)
+        })
+    }
+
+  }
 })

@@ -16,9 +16,9 @@
             </li>
             <li>
               <button type="button" class="btn btn-more" @click="getMyproduct(item.id)"> 查看更多 </button>
-              <button type="button" class="btn btn-outline-danger btn-cart" :disabled="this.status.add2cart === item.id"
+              <button type="button" class="btn btn-outline-danger btn-cart" :disabled="this.add2status.add2cart === item.id"
                 @click="addCart(item.id)">
-                <div v-if="this.status.add2cart === item.id" class="spinner-grow spinner-grow-sm text-danger" role="status">
+                <div v-if="this.add2status.add2cart === item.id" class="spinner-grow spinner-grow-sm text-danger" role="status">
                   <span class="visually-hidden">Loading...</span>
                 </div>加入購物車
               </button>
@@ -45,7 +45,7 @@ export default {
       tempProducts: {},
       // isLoading: false,
       myproduct: {},
-      status: {
+      add2status: {
         add2cart: '' // add card status
       }
 
@@ -56,7 +56,7 @@ export default {
     ...mapState(statusStore, ['isLoading'])
   },
   methods: {
-    ...mapActions(productStore, ['getproducts']),
+    ...mapActions(productStore, ['getproducts', 'getMyproduct', 'getCart', 'addCart'])
     // getproducts () {
     //   //// console.log('CHECK STATUS : success')
     //   const api = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}products?pag=:page`
@@ -73,32 +73,34 @@ export default {
     //       }
     //     })
     // },
-    getMyproduct (id) {
-      this.$router.push(`/products/backpack/${id}`)
-    },
-    addCart (id) {
-      // console.log(id)
-      const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
-      // this.status.add2cart = id
-      console.log(this.status.add2cart)
-      const cart = {
-        product_id: id,
-        qty: 1
-      }
-      this.$http.post(url, { data: cart })
-        .then((res) => {
-          this.status.add2cart = ''
-          console.log(res)
-        })
-    },
-    getCart () {
-      const cart = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
-      this.$http.get(cart)
-        .then((res) => {
-          console.log(res)
-          console.log(res.data.data.carts.length)
-        })
-    }
+    // getMyproduct (id) {
+    //   this.$router.push(`/products/backpack/${id}`)
+    // },
+
+    // addCart (id) {
+    //   // console.log(id)
+    //   const url = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
+    //   // this.add2status.add2cart = id
+    //   console.log(this.add2status.add2cart)
+    //   const cart = {
+    //     product_id: id,
+    //     qty: 1
+    //   }
+    //   this.$http.post(url, { data: cart })
+    //     .then((res) => {
+    //       this.add2status.add2cart = ''
+    //       console.log(res)
+    //     })
+    // },
+
+    // getCart () {
+    //   const cart = `${process.env.VUE_APP_API}api/${process.env.VUE_APP_PATH}cart`
+    //   this.$http.get(cart)
+    //     .then((res) => {
+    //       console.log(res)
+    //       console.log(res.data.data.carts.length)
+    //     })
+    // }
 
   },
   created () {
